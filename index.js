@@ -32,6 +32,7 @@ const material = new THREE.MeshPhongMaterial({
 // material.map.colorSpace = THREE.SRGBColorSpace;
 const earthMesh = new THREE.Mesh(geometry, material);
 earthGroup.add(earthMesh);
+earthGroup.position.set(10,0,0)
 
 const lightsMat = new THREE.MeshBasicMaterial({
   map: loader.load("./textures/03_earthlights1k.jpg"),
@@ -57,12 +58,29 @@ const glowMesh = new THREE.Mesh(geometry, fresnelMat);
 glowMesh.scale.setScalar(1.01);
 earthGroup.add(glowMesh);
 
-const stars = getStarfield({numStars: 2000});
+const stars = getStarfield({numStars: 5000});
 scene.add(stars);
 
 const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
 sunLight.position.set(-2, 0.5, 1.5);
 scene.add(sunLight);
+
+const marsGroup = new THREE.Group();
+marsGroup.rotation.z = -23.4 * Math.PI / 180;
+scene.add(marsGroup);
+new OrbitControls(camera, renderer.domElement);
+const detail = 12;
+const loader = new THREE.TextureLoader();
+const marsgeometry = new THREE.IcosahedronGeometry(1, detail);
+const marsmaterial = new THREE.MeshPhongMaterial({
+  map: loader.load("./textures/mars_1k_normal.jpg"),
+  topologyMap: loader.load("./textures/mars_1k_topo.jpg"),
+  bumpMap: loader.load("./textures/marsbump1k.jpg"),
+  bumpScale: 0.04,
+});
+// material.map.colorSpace = THREE.SRGBColorSpace;
+const marsMesh = new THREE.Mesh(marsgeometry, marsmaterial);
+marsGroup.add(marsMesh);
 
 function animate() {
   requestAnimationFrame(animate);
